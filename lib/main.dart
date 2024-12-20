@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: SafeArea(
             child: Padding(
-          padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 24),
           child: HomeScreen(),
         )),
       ),

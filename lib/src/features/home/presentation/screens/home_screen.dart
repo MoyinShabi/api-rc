@@ -11,7 +11,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final photos = ref.watch(fetchPhotosProvider);
     final users = ref.watch(fetchUsersProvider);
-    final isAddingUser = ref.watch(homeControllerProvider)?.isLoading;
+    final isAddingUser = ref.watch(
+        homeControllerProvider.select((value) => value?.isLoading == true));
     return RefreshIndicator.adaptive(
       onRefresh: () {
         return Future.wait([
@@ -20,6 +21,7 @@ class HomeScreen extends ConsumerWidget {
         ]);
       },
       child: Column(
+        spacing: 8,
         children: [
           Expanded(
             child: photos.when(
@@ -35,7 +37,6 @@ class HomeScreen extends ConsumerWidget {
                   Center(child: const CircularProgressIndicator.adaptive()),
             ),
           ),
-          SizedBox(height: 4),
           Expanded(
             child: users.when(
               data: (data) => Container(
@@ -51,7 +52,6 @@ class HomeScreen extends ConsumerWidget {
                   Center(child: const CircularProgressIndicator.adaptive()),
             ),
           ),
-          SizedBox(height: 4),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -63,7 +63,7 @@ class HomeScreen extends ConsumerWidget {
               await ref.read(homeControllerProvider.notifier).addUser();
               ref.invalidate(fetchUsersProvider);
             },
-            child: isAddingUser == true
+            child: isAddingUser
                 ? SizedBox(
                     height: 12,
                     width: 12,
