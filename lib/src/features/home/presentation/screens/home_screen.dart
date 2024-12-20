@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unsplash_app/src/features/home/domain/models/photo.dart';
+import 'package:unsplash_app/src/features/home/domain/models/user.dart';
 import 'package:unsplash_app/src/features/home/presentation/controllers/home_controller.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -27,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
                     border: Border.all(color: Colors.black, width: 2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: PhotoList(photos: data)),
+                  child: _PhotoList(photos: data)),
               error: (error, stackTrace) =>
                   Center(child: Text(error.toString())),
               loading: () =>
@@ -42,17 +43,7 @@ class HomeScreen extends ConsumerWidget {
                   border: Border.all(color: Colors.grey, width: 2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: data.length,
-                  itemBuilder: (_, index) {
-                    var item = data[index];
-                    return ListTile(
-                      title: Text('${item.id} ${item.fullName}'),
-                      subtitle: Text(item.email),
-                    );
-                  },
-                ),
+                child: _UserList(users: data),
               ),
               error: (error, stackTrace) =>
                   Center(child: Text(error.toString())),
@@ -85,8 +76,29 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class PhotoList extends StatelessWidget {
-  const PhotoList({super.key, required this.photos});
+class _UserList extends StatelessWidget {
+  const _UserList({required this.users});
+
+  final List<User> users;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: users.length,
+      itemBuilder: (_, index) {
+        var item = users[index];
+        return ListTile(
+          title: Text('${item.id} ${item.fullName}'),
+          subtitle: Text(item.email),
+        );
+      },
+    );
+  }
+}
+
+class _PhotoList extends StatelessWidget {
+  const _PhotoList({required this.photos});
 
   final List<Photo> photos;
 
@@ -96,12 +108,12 @@ class PhotoList extends StatelessWidget {
           crossAxisCount: 3,
         ),
         itemCount: photos.length,
-        itemBuilder: (_, index) => PhotoItem(photo: photos[index]),
+        itemBuilder: (_, index) => _PhotoItem(photo: photos[index]),
       );
 }
 
-class PhotoItem extends StatelessWidget {
-  const PhotoItem({super.key, required this.photo});
+class _PhotoItem extends StatelessWidget {
+  const _PhotoItem({required this.photo});
 
   final Photo photo;
 
